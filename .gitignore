@@ -106,3 +106,7 @@ venv.bak/
 # check scripts
 check.sh
 reproduce_check.py
+*.pt
+*.JIYINGZHAN-PC0
+*.xml
+*.iml

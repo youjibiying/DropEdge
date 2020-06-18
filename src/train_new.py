@@ -155,8 +155,8 @@ if args.early_stopping > 0:
     print("Model is saving to: %s" % (early_stopping.fname))
 
 if args.no_tensorboard is False:
-    tb_writer = SummaryWriter(
-        comment=f"-dataset_{args.dataset}-type_{args.type}"
+    tb_writer = SummaryWriter('tensorboard'
+        # comment=f"-dataset_{args.dataset}-type_{args.type}"
     )
 
 def get_lr(optimizer):
@@ -271,11 +271,14 @@ for epoch in range(args.epochs):
               'v_time: {:.4f}s'.format(outputs[6]))
     
     if args.no_tensorboard is False:
-        tb_writer.add_scalars('Loss', {'train': outputs[0], 'val': outputs[2]}, epoch)
-        tb_writer.add_scalars('Accuracy', {'train': outputs[1], 'val': outputs[3]}, epoch)
-        tb_writer.add_scalar('lr', outputs[4], epoch)
-        tb_writer.add_scalars('Time', {'train': outputs[5], 'val': outputs[6]}, epoch)
-        
+        tb_writer.add_scalar('loss/train', outputs[0], epoch)
+        tb_writer.add_scalar('loss/val', outputs[2], epoch)
+        tb_writer.add_scalar(f'acc/train', outputs[1], epoch)
+        # tb_writer.add_scalars('Loss', {'train': outputs[0], 'val': outputs[2]}, epoch)
+        # tb_writer.add_scalars('Accuracy', {'train': outputs[1], 'val': outputs[3]}, epoch)
+        # tb_writer.add_scalar('lr', outputs[4], epoch)
+        # tb_writer.add_scalars('Time', {'train': outputs[5], 'val': outputs[6]}, epoch)
+        #
 
     loss_train[epoch], acc_train[epoch], loss_val[epoch], acc_val[epoch] = outputs[0], outputs[1], outputs[2], outputs[
         3]

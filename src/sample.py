@@ -76,20 +76,19 @@ class Sampler:
         Randomly drop edge and preserve percent% edges.
         """
         "Opt here"
-        if percent >= 1.0:
+        if percent >= 1.0: # percent=0.05
             return self.stub_sampler(normalization, cuda)
-        
-        nnz = self.train_adj.nnz
-        perm = np.random.permutation(nnz)
-        preserve_nnz = int(nnz*percent)
-        perm = perm[:preserve_nnz]
-        r_adj = sp.coo_matrix((self.train_adj.data[perm],
-                               (self.train_adj.row[perm],
-                                self.train_adj.col[perm])),
-                              shape=self.train_adj.shape)
-        r_adj = self._preprocess_adj(normalization, r_adj, cuda)
-        fea = self._preprocess_fea(self.train_features, cuda)
-        return r_adj, fea
+        nnz = self.train_adj.nnz # 10556条边
+        perm = np.random.permutation(nnz) # 随机排列
+        preserve_nnz = int(nnz*percent) # 取出比例为527条
+        perm = perm[:preserve_nnz] #对随机排列的边取出 前527条 array([1950, 8129, 8315, 1360,..., 7676, 9025, 5400])
+        r_adj = sp.coo_matrix((self.train_adj.data[perm], # coo矩阵中[row ,col. data] 这三个向量分别存储，维度 train_adj.data [1,10556]
+                               (self.train_adj.row[perm], # 维度 train_adj.row [1,10556]
+                                self.train_adj.col[perm])),# train_adj.col [1,10556]
+                              shape=self.train_adj.shape) # 构建只有preserve_nzz条边的sparse adj
+        r_adj = self._preprocess_adj(normalization, r_adj, cuda) # 标准化 在normalization.py中 # [2708,2708]
+        fea = self._preprocess_fea(self.train_features, cuda) # cuda [2708,1433]
+        return r_adj, fea # 返回进行处理后的
 
     def vertex_sampler(self, percent, normalization, cuda):
         """
