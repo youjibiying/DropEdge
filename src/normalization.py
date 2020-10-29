@@ -28,7 +28,7 @@ def gcn(adj):
    return (sp.eye(adj.shape[0]) + d_mat_inv_sqrt.dot(adj).dot(d_mat_inv_sqrt)).tocoo()
 
 
-def aug_normalized_adjacency(adj):
+def aug_normalized_adjacency(adj): # A' = (D + I)^-1/2 * ( A + I ) * (D + I)^-1/2
    adj = adj + sp.eye(adj.shape[0])
    adj = sp.coo_matrix(adj)
    row_sum = np.array(adj.sum(1))
